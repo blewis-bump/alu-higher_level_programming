@@ -1,14 +1,14 @@
 #!/usr/bin/python3
-import dis
+import marshal
 
 if __name__ == "__main__":
     with open("hidden_4.pyc", "rb") as f:
-        f.read(16)  # Skip the header of the .pyc file (magic number + timestamp)
-        code_obj = compile(f.read(), "hidden_4.pyc", "exec")
-    
-    # Get all names defined in the code object
+        f.read(16)  # skip header (Python 3.8)
+        code_obj = marshal.load(f)  # read the code object
+
+    # get all names in the code object that do not start with __
     names = [name for name in code_obj.co_names if not name.startswith("__")]
 
-    # Print names in alpha order
+    # print names in alphabetical order
     for name in sorted(names):
         print(name)
