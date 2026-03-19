@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """Module that defines a Rectangle class with width, height, area,
-perimeter, string representation, and deletion message.
+perimeter, string/repr representation, and deletion message.
 """
 
 
@@ -45,28 +45,21 @@ class Rectangle:
         return self.__width * self.__height
 
     def perimeter(self):
-        """Return the perimeter of the rectangle.
-        If width or height is 0, perimeter is 0.
-        """
+        """Return the perimeter; 0 if width or height is 0."""
         if self.__width == 0 or self.__height == 0:
             return 0
         return 2 * (self.__width + self.__height)
 
     def __str__(self):
-        """Return the rectangle as a string of # characters.
-        If width or height is 0, return an empty string.
-        """
+        """Return a string of # characters representing the rectangle."""
         if self.__width == 0 or self.__height == 0:
             return ""
         return "\n".join("#" * self.__width for _ in range(self.__height))
 
     def __repr__(self):
-        """Return a string representation to recreate a new instance using eval().
-        Split into multiple lines to avoid E501 line too long.
-        """
-        return ("Rectangle({}, {})"
-                .format(self.__width, self.__height))
+        """Return a string to recreate a new instance with eval()."""
+        return "Rectangle({}, {})".format(self.__width, self.__height)
 
     def __del__(self):
-        """Print a message when an instance of Rectangle is deleted."""
+        """Print a message when an instance is deleted."""
         print("Bye rectangle...")
