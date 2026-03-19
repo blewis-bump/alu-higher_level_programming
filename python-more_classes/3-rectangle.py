@@ -1,5 +1,7 @@
 #!/usr/bin/python3
-"""Module that defines a Rectangle class with width, height, area, perimeter, and string representation."""
+"""Module that defines a Rectangle class with width, height, area,
+perimeter, and string representation.
+"""
 
 
 class Rectangle:
@@ -57,7 +59,4 @@ class Rectangle:
         if self.__width == 0 or self.__height == 0:
             return ""
 
-        lines = []
-        for _ in range(self.__height):
-            lines.append("#" * self.__width)
-        return "\n".join(lines)
+        return "\n".join("#" * self.__width for _ in range(self.__height))
