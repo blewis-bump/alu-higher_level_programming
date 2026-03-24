@@ -1,13 +1,34 @@
 >>> MyList = __import__("1-my_list").MyList
+
+# check __str__
 >>> m = MyList()
->>> m.append(3)
 >>> m.append(1)
+>>> m.append(4)
 >>> m.append(2)
+>>> print(m)
+[1, 4, 2]
+
+# check print_sorted() with no sorted append
 >>> m.print_sorted()
-[1, 2, 3]
->>> m2 = MyList([5, 3, 1])
+[1, 2, 4]
+
+# check original list is unchanged after print_sorted
+>>> print(m)
+[1, 4, 2]
+
+# check print_sorted() with negative numbers
+>>> m2 = MyList([3, -1, 2, -5, 0])
 >>> m2.print_sorted()
-[1, 3, 5]
+[-5, -1, 0, 2, 3]
+>>> print(m2)
+[3, -1, 2, -5, 0]
+
+# check empty list
 >>> m3 = MyList()
 >>> m3.print_sorted()
 []
+
+# check single element
+>>> m4 = MyList([7])
+>>> m4.print_sorted()
+[7]
