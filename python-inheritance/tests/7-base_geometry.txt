@@ -1,32 +1,63 @@
 >>> BaseGeometry = __import__("7-base_geometry").BaseGeometry
 >>> bg = BaseGeometry()
+
 >>> bg.integer_validator("my_int", 12)
 >>> bg.integer_validator("width", 89)
+
 >>> try:
 ...     bg.integer_validator("name", "John")
 ... except TypeError as e:
 ...     print(e)
 name must be an integer
+
 >>> try:
 ...     bg.integer_validator("age", 0)
 ... except ValueError as e:
 ...     print(e)
 age must be greater than 0
+
 >>> try:
 ...     bg.integer_validator("distance", -4)
 ... except ValueError as e:
 ...     print(e)
 distance must be greater than 0
+
 >>> try:
 ...     bg.integer_validator("age", True)
 ... except TypeError as e:
 ...     print(e)
 age must be an integer
+
 >>> try:
 ...     bg.integer_validator("age", (4,))
 ... except TypeError as e:
 ...     print(e)
 age must be an integer
+
+>>> try:
+...     bg.integer_validator("age", [3])
+... except TypeError as e:
+...     print(e)
+age must be an integer
+
+>>> try:
+...     bg.integer_validator("age", {3, 4})
+... except TypeError as e:
+...     print(e)
+age must be an integer
+
+>>> try:
+...     bg.integer_validator("age", None)
+... except TypeError as e:
+...     print(e)
+age must be an integer
+
+>>> try:
+...     bg.integer_validator("age")
+... except TypeError as e:
+...     print(e)
+integer_validator() missing 1 required positional argument: 'value'
+
 >>> try:
 ...     bg.area()
 ... except Exception as e:
