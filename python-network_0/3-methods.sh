@@ -1,2 +1,3 @@
 #!/bin/bash
-curl -s -X OPTIONS "$1" -v 2>&1 | grep "Allow:"
+# Takes in a URL and displays all HTTP methods the server will accept
+curl -s -X OPTIONS "$1" | xargs

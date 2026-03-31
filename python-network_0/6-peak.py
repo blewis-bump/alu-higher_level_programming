@@ -3,7 +3,17 @@
 
 
 def find_peak(list_of_integers):
-    """Find a peak in a list of unsorted integers."""
+    """Find a peak in a list of unsorted integers using binary search.
+
+    A peak is defined as an element that is greater than or equal to
+    its neighbors. Uses binary search for O(log(n)) complexity.
+
+    Args:
+        list_of_integers: A list of unsorted integers.
+
+    Returns:
+        A peak integer from the list, or None if the list is empty.
+    """
     if not list_of_integers:
         return None
 
