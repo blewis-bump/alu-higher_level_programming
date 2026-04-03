@@ -1,6 +1,9 @@
 #!/usr/bin/python3
 """Unittest for Rectangle class."""
 import unittest
+import os
+from io import StringIO
+from unittest.mock import patch
 from models.base import Base
 from models.rectangle import Rectangle
 
@@ -102,6 +105,27 @@ class TestRectangle(unittest.TestCase):
         r = Rectangle(4, 6, 2, 1, 12)
         self.assertEqual(str(r), "[Rectangle] (12) 2/1 - 4/6")
 
+    def test_display_no_x_y(self):
+        """Test display without x and y."""
+        r = Rectangle(4, 2)
+        with patch('sys.stdout', new=StringIO()) as fake_out:
+            r.display()
+            self.assertEqual(fake_out.getvalue(), "####\n####\n")
+
+    def test_display_no_y(self):
+        """Test display without y (x set)."""
+        r = Rectangle(3, 2, 1)
+        with patch('sys.stdout', new=StringIO()) as fake_out:
+            r.display()
+            self.assertEqual(fake_out.getvalue(), " ###\n ###\n")
+
+    def test_display_with_x_and_y(self):
+        """Test display with x and y."""
+        r = Rectangle(2, 2, 2, 2)
+        with patch('sys.stdout', new=StringIO()) as fake_out:
+            r.display()
+            self.assertEqual(fake_out.getvalue(), "\n\n  ##\n  ##\n")
+
     def test_update_args(self):
         """Test update with positional args."""
         r = Rectangle(10, 10, 10, 10)
@@ -144,6 +168,47 @@ class TestRectangle(unittest.TestCase):
         r2 = Rectangle.create(**r1_dict)
         self.assertEqual(str(r1), str(r2))
         self.assertFalse(r1 is r2)
+
+    def test_save_to_file_none(self):
+        """Test Rectangle.save_to_file(None)."""
+        Rectangle.save_to_file(None)
+        with open("Rectangle.json", "r") as f:
+            self.assertEqual(f.read(), "[]")
+        os.remove("Rectangle.json")
+
+    def test_save_to_file_empty(self):
+        """Test Rectangle.save_to_file([])."""
+        Rectangle.save_to_file([])
+        with open("Rectangle.json", "r") as f:
+            self.assertEqual(f.read(), "[]")
+        os.remove("Rectangle.json")
+
+    def test_save_to_file_one_rect(self):
+        """Test Rectangle.save_to_file([Rectangle(1, 2)])."""
+        Rectangle.save_to_file([Rectangle(1, 2)])
+        with open("Rectangle.json", "r") as f:
+            content = f.read()
+        self.assertIn("width", content)
+        self.assertIn("height", content)
+        os.remove("Rectangle.json")
+
+    def test_load_from_file_no_file(self):
+        """Test Rectangle.load_from_file() when file does not exist."""
+        if os.path.exists("Rectangle.json"):
+            os.remove("Rectangle.json")
+        result = Rectangle.load_from_file()
+        self.assertEqual(result, [])
+
+    def test_load_from_file_exists(self):
+        """Test Rectangle.load_from_file() when file exists."""
+        r1 = Rectangle(10, 7, 2, 8)
+        Rectangle.save_to_file([r1])
+        result = Rectangle.load_from_file()
+        self.assertEqual(len(result), 1)
+        self.assertIsInstance(result[0], Rectangle)
+        self.assertEqual(result[0].width, 10)
+        self.assertEqual(result[0].height, 7)
+        os.remove("Rectangle.json")
 
 
 if __name__ == '__main__':

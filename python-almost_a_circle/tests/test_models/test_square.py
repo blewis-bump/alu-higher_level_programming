@@ -1,6 +1,9 @@
 #!/usr/bin/python3
 """Unittest for Square class."""
 import unittest
+import os
+from io import StringIO
+from unittest.mock import patch
 from models.base import Base
 from models.square import Square
 
@@ -69,6 +72,27 @@ class TestSquare(unittest.TestCase):
         s = Square(5, 1, 3, 10)
         self.assertEqual(str(s), "[Square] (10) 1/3 - 5")
 
+    def test_display_no_x_y(self):
+        """Test display without x and y."""
+        s = Square(3)
+        with patch('sys.stdout', new=StringIO()) as fake_out:
+            s.display()
+            self.assertEqual(fake_out.getvalue(), "###\n###\n###\n")
+
+    def test_display_no_y(self):
+        """Test display without y (x set)."""
+        s = Square(2, 1)
+        with patch('sys.stdout', new=StringIO()) as fake_out:
+            s.display()
+            self.assertEqual(fake_out.getvalue(), " ##\n ##\n")
+
+    def test_display_with_x_and_y(self):
+        """Test display with x and y."""
+        s = Square(2, 1, 2)
+        with patch('sys.stdout', new=StringIO()) as fake_out:
+            s.display()
+            self.assertEqual(fake_out.getvalue(), "\n\n ##\n ##\n")
+
     def test_update_args(self):
         """Test update with positional args."""
         s = Square(5)
@@ -118,6 +142,45 @@ class TestSquare(unittest.TestCase):
         """Test y negative raises ValueError."""
         with self.assertRaises(ValueError):
             Square(5, 0, -1)
+
+    def test_save_to_file_none(self):
+        """Test Square.save_to_file(None)."""
+        Square.save_to_file(None)
+        with open("Square.json", "r") as f:
+            self.assertEqual(f.read(), "[]")
+        os.remove("Square.json")
+
+    def test_save_to_file_empty(self):
+        """Test Square.save_to_file([])."""
+        Square.save_to_file([])
+        with open("Square.json", "r") as f:
+            self.assertEqual(f.read(), "[]")
+        os.remove("Square.json")
+
+    def test_save_to_file_one_square(self):
+        """Test Square.save_to_file([Square(1)])."""
+        Square.save_to_file([Square(1)])
+        with open("Square.json", "r") as f:
+            content = f.read()
+        self.assertIn("size", content)
+        os.remove("Square.json")
+
+    def test_load_from_file_no_file(self):
+        """Test Square.load_from_file() when file does not exist."""
+        if os.path.exists("Square.json"):
+            os.remove("Square.json")
+        result = Square.load_from_file()
+        self.assertEqual(result, [])
+
+    def test_load_from_file_exists(self):
+        """Test Square.load_from_file() when file exists."""
+        s1 = Square(5, 2, 3)
+        Square.save_to_file([s1])
+        result = Square.load_from_file()
+        self.assertEqual(len(result), 1)
+        self.assertIsInstance(result[0], Square)
+        self.assertEqual(result[0].size, 5)
+        os.remove("Square.json")
 
 
 if __name__ == '__main__':
