@@ -1,5 +1,4 @@
-
->>> text_indentation = __import__('5-text_indentation').text_indentation
+>>> text_indentation = __import__("5-text_indentation").text_indentation
 >>> text_indentation("Hello.")
 Hello.
 <BLANKLINE>
@@ -20,3 +19,7 @@ Hi.
 <BLANKLINE>
 How?
 <BLANKLINE>
+>>> text_indentation()
+Traceback (most recent call last):
+    ...
+TypeError: text_indentation() missing 1 required positional argument: 'text'
